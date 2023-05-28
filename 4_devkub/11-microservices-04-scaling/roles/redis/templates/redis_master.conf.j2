@@ -1,0 +1,7 @@
+# bind 127.0.0.1
+protected-mode no
+port {{ masterport }}
+pidfile /var/run/redis_{{ masterport }}.pid
+cluster-enabled yes
+cluster-config-file nodes-{{ masterport }}.conf
+cluster-node-timeout 15000

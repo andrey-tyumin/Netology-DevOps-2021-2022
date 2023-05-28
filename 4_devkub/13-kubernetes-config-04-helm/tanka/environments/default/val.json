@@ -1,0 +1,14 @@
+{
+"psql" : 
+ {"image": "postgres"
+    },
+"front" : 
+ {"image" : "imustgetout/hw131frontend:v1.1",
+  "replicas" : 2,
+  "nodePort" : 30080
+    },
+"back" :
+ {"image" : "imustgetout/hw131backend:v1.1",
+  "replicas" : 2
+    }
+}

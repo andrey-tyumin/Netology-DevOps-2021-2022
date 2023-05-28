@@ -1,0 +1,18 @@
+---
+all:
+  hosts:
+    redis1:
+      ansible_host: ${redis1-ip}
+      masterport: 6379
+      slaveport: 6381
+    redis2:
+      ansible_host: ${redis2-ip}
+      masterport: 6380
+      slaveport: 6379
+    redis3:
+      ansible_host: ${redis3-ip}
+      masterport: 6381
+      slaveport: 6380
+  vars:
+    ansible_connection: ssh
+    ansible_user: andrey

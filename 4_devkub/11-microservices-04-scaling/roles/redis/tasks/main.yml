@@ -1,0 +1,5 @@
+---
+# tasks file for redis
+- include_tasks: redis.yml
+- include_tasks: ruby.yml
+- import_tasks: cluster.yml

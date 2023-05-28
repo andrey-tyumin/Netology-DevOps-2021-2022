@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-dpl
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: back-pod
+  template:
+    metadata:
+      labels:
+        app: back-pod
+    spec:
+      containers:
+      - name: back
+        image: imustgetout/hw131backend:v1.1
+        ports:
+        - containerPort: 9000
+        env: 
+        - name: DATABASE_URL
+          value: postgres://postgres:postgres@db:5432/news
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-svc
+spec:
+  selector:
+    app: back-pod
+  ports:
+  - protocol: TCP
+    port: 9000
+    targetPort: 9000

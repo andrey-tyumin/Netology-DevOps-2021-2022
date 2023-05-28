@@ -1,0 +1,21 @@
+spec:
+  containers:
+  - image: itsthenetwork/nfs-server-alpine:12
+    name: nfs-server
+    env:
+      - name:  SHARED_DIRECTORY
+        value: /data
+    securityContext:
+      privileged: true
+    volumeMounts:
+      - mountPath: /data
+        name: nfs-volume
+    restartPolicy: unless-stopped
+    ports:
+      - 2049:2049
+    stdin: false
+    tty: false
+  volumes:
+    - name: nfs-volume
+      hostPath:
+        path: /data

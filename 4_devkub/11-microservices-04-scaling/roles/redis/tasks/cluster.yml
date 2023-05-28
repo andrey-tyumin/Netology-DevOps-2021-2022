@@ -1,0 +1,6 @@
+---
+- name: run
+  shell:
+    cmd: echo "yes" | redis-cli --cluster create {{ hostvars[ 'redis1' ].ansible_host }}:{{ hostvars[ 'redis1' ].masterport }} {{ hostvars[ 'redis2' ].ansible_host }}:{{ hostvars[ 'redis2' ].masterport }} {{ hostvars[ 'redis3' ].ansible_host }}:{{ hostvars[ 'redis3' ].masterport }}
+    chdir: /opt/redis-stable
+  when: inventory_hostname=="redis1"

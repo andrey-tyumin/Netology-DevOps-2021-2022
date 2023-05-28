@@ -1,0 +1,58 @@
+---
+- name: "Download Redis tar"
+  get_url:
+    url: "http://download.redis.io/redis-stable.tar.gz"
+    dest: "roles/redis/files/redis-stable.tar.gz"
+    checksum: ""
+  delegate_to: localhost
+  register: download_redis
+  until: download_redis is succeeded
+- name: Copy Redis to manage host
+  copy:
+    src: "files/redis-stable.tar.gz"
+    mode: 0755
+    dest: "/tmp/redis-stable.tar.gz"
+- name: Unarchive tar
+  become: true
+  ansible.builtin.unarchive:
+    src: /tmp/redis-stable.tar.gz
+    dest: /opt
+    remote_src: yes
+- name: Install Epel
+  become: true
+  yum:
+    name: epel-release
+    state: present
+- name: Update tcl
+  become: true
+  yum:
+    name: tcl
+    state: latest
+    enablerepo: "epel"
+- name: Install Redis
+  become: true
+  command: make install
+  args:
+    chdir: /opt/redis-stable
+- name: Copy config for master
+  become: true
+  template:
+    src: redis_master.conf.j2
+    mode: 0644
+    dest: /opt/redis-stable/redis_master.conf
+- name: Copy config for slave
+  become: true
+  template:
+    src: redis_slave.conf.j2
+    mode: 0644
+    dest: /opt/redis-stable/redis_slave.conf
+- name: Start redis-master
+  become: true
+  command: /usr/local/bin/redis-server /opt/redis-stable/redis_master.conf --daemonize yes
+  args:
+    chdir: /opt/redis-stable
+- name: Start redis-slave
+  become: true
+  command: /usr/local/bin/redis-server /opt/redis-stable/redis_slave.conf --daemonize yes
+  args:
+    chdir: /opt/redis-stable

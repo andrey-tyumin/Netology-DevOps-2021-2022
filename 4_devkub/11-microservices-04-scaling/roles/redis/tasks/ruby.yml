@@ -1,0 +1,4 @@
+---
+- name: Install Redis Ruby gem
+  become_user: andrey
+  command: bash -lc "gem install redis"
