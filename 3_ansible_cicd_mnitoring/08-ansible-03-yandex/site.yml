@@ -1,0 +1,90 @@
+---
+- name: Install Elasticsearch
+  hosts: elasticsearch
+  handlers:
+    - name: restart Elasticsearch
+      become: true
+      service:
+        name: elasticsearch
+        state: restarted
+    - name: restart kibana
+      become: true
+      become_user: root
+      service:
+        name: kibana
+        state: restarted
+  tasks:
+    - name: "Download Elasticsearch's rpm"
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
+        dest: "/tmp/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
+      register: download_elastic
+      until: download_elastic is succeeded
+    - name: Install Elasticsearch
+      become: true
+      yum:
+        name: "/tmp/elasticsearch-{{ elk_stack_version }}-x86_64.rpm"
+        state: present
+    - name: Configure Elasticsearch
+      become: true
+      template:
+        src: elasticsearch.yml.j2
+        dest: /etc/elasticsearch/elasticsearch.yml
+      notify: restart Elasticsearch
+- name: Install Kibana
+  hosts: kibana
+  tasks:
+    - name: "Download Kibana"     
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/kibana/kibana-{{ kibana_version }}-x86_64.rpm"
+        dest: "/tmp/kibana-{{ kibana_version }}-x86_64.rpm"
+      register: download_kibana
+      until: download_kibana is succeeded
+    - name: "Install Kibana"
+      become: true
+      yum:
+        name: "/tmp/kibana-{{ kibana_version }}-x86_64.rpm"
+        state: present
+    - name: "Configure Kibana"
+      become: true
+      template:
+        src: kibana.yml.j2
+        dest: "/etc/kibana/kibana.yml"
+    - name: "Enable kibana service"
+      become: true
+      systemd:
+        name: kibana
+        state: restarted
+        enabled: yes
+    - name:  "Open kibana port"
+      become: true
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 5601
+        jump: ACCEPT
+- name: Install filebeat
+  hosts: filebeat
+  tasks:
+    - name: Download filebeat
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.14.2-x86_64.rpm"
+        dest: "/tmp/filebeat-{{ filebeat_version }}-x86_64.rpm"
+      register: download_filebeat
+      until: download_filebeat is succeeded
+    - name: Install filebeat
+      become: true
+      yum:
+        name: "/tmp/filebeat-{{ filebeat_version }}-x86_64.rpm"
+        state: present
+    - name: Configure filebeat
+      become: true
+      template:
+        src: filebeat.yml.j2
+        dest: "/etc/filebeat/filebeat.yml"
+    - name: "Enable filebeat service"
+      become: true
+      systemd:
+        name: filebeat
+        state: restarted
+        enabled: yes

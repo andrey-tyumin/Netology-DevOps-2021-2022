@@ -1,0 +1,3 @@
+server.host: "{{ ansible_facts['default_ipv4']['address'] }}"
+elasticsearch.hosts: "http://{{  hostvars['elasticsearch']['ansible_default_ipv4']['address'] }}:9200"
+kibana.index: ".kibana"

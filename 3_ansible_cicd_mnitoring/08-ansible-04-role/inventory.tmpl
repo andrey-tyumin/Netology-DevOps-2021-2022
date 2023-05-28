@@ -1,0 +1,12 @@
+---
+all:
+  hosts:
+    elasticsearch:
+      ansible_host: ${elasticsearch-ip}
+    kibana:
+      ansible_host: ${kibana-ip}
+    filebeat:
+      ansible_host: ${filebeat-ip}
+  vars:
+    ansible_connection: ssh
+    ansible_user: andrey

@@ -1,0 +1,7 @@
+---
+setup.kibana:
+  host: "http://{{  hostvars['kibana']['ansible_default_ipv4']['address'] }}:5601"
+
+output.elasticsearch:
+  # Array of hosts to connect to.l
+  hosts: "http://{{  hostvars['elasticsearch']['ansible_default_ipv4']['address'] }}:9200"

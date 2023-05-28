@@ -1,0 +1,10 @@
+spec:
+  containers:
+  - image: jetbrains/teamcity-agent
+    securityContext:
+      privileged: false
+    env:
+    - name: SERVER_URL
+      value: ${teamcity-server-ip}:8111
+    stdin: false
+    tty: false
