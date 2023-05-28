@@ -1,0 +1,17 @@
+apiVersion: qbec.io/v1alpha1
+kind: App
+metadata:
+  name: 135hw
+spec:
+  environments:
+    stage:
+      defaultNamespace: stage
+      server: https://178.154.226.116:6443
+      excludes:
+        - production
+    production:
+      defaultNamespace: production
+      server: https://178.154.226.116:6443
+      excludes:
+        - stage
+  vars: {}
