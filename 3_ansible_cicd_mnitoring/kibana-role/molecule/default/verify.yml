@@ -1,0 +1,21 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Example assertion
+    assert:
+      that: true
+  - name: Waits for port 5601
+    wait_for:
+      host: 0.0.0.0
+      port: 5601
+  - name: Check kibana port
+    uri:
+      url: http://127.0.0.1:5601
+    register: kibana_ok
+  - name: Verify kibana port is ok
+    assert:
+      that: kibana_ok == '200'

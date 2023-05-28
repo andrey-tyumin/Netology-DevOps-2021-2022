@@ -1,0 +1,38 @@
+pipeline {
+    agent {
+        node {
+            label "linux"
+        }
+    }
+    stages {
+        stage('Checkout'){
+            steps{
+                    dir('mnt-homeworks-ansible') {
+                    git branch: 'main', url: 'https://github.com/andrey-tyumin/mnt-homeworks-ansible.git'
+                    }
+                }
+            }
+        stage('Install requirements'){
+            steps{
+                dir('mnt-homeworks-ansible') {
+                sh 'python3 -m pip install -r test-requirements.txt'
+                }
+            }
+        }
+        stage('Mkdir'){
+            steps{
+                dir('mnt-homeworks-ansible') {
+                sh 'mkdir -p ./molecule/default/files'
+                }
+            }
+        }
+        stage('Run molecule'){
+            steps{
+                dir('mnt-homeworks-ansible') {
+                sh 'molecule test'
+                }
+            }
+            
+        }
+    }
+}

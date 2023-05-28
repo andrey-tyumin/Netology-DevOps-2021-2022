@@ -1,0 +1,4 @@
+---
+# defaults file for filebeat-role
+filebeat_version: "7.15.0"
+filebeat_install_type: remote

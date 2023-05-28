@@ -1,0 +1,8 @@
+---
+- name: Create file
+  hosts: localhost
+  tasks:
+    - name: Create file
+      my_own_module:
+        path: '/tmp/no_def_file_role'
+        content: 'Hochu leto'

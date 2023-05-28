@@ -1,0 +1,4 @@
+---
+# defaults file for test_role
+path: /tmp/test_file_role
+content: some worlds
